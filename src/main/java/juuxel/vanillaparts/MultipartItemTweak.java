@@ -22,10 +22,10 @@ import juuxel.vanillaparts.part.VpParts;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.minecraft.block.AbstractButtonBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.ButtonBlock;
 import net.minecraft.block.CakeBlock;
 import net.minecraft.block.DyedCarpetBlock;
 import net.minecraft.block.FenceBlock;
@@ -100,7 +100,7 @@ public enum MultipartItemTweak implements UseBlockCallback {
                 offer = handleSlabs(player, world, hand, hit, pos, block);
             } else if (block == Blocks.LEVER) {
                 offer = handleWallMounted(player, world, hand, hit, pos, block, (holder, face, facing) -> new LeverPart(VpParts.LEVER, holder, face, facing, false));
-            } else if (block instanceof AbstractButtonBlock) {
+            } else if (block instanceof ButtonBlock) {
                 offer = handleWallMounted(player, world, hand, hit, pos, block, (holder, face, facing) -> new ButtonPart(VpParts.BUTTON, holder, block, face, facing));
             } else if (block instanceof FenceBlock) {
                 offer = handleFences(world, hit, pos, block);
@@ -232,7 +232,7 @@ public enum MultipartItemTweak implements UseBlockCallback {
             if (direction.getAxis().isVertical()) {
                 vanillaState = block.getDefaultState()
                     .with(LeverBlock.FACE, direction == Direction.UP ? WallMountLocation.CEILING : WallMountLocation.FLOOR)
-                    .with(LeverBlock.FACING, ctx.getPlayerFacing());
+                    .with(LeverBlock.FACING, ctx.getHorizontalPlayerFacing());
             } else {
                 vanillaState = block.getDefaultState()
                     .with(LeverBlock.FACE, WallMountLocation.WALL)

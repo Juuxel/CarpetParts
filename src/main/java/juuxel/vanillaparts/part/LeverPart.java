@@ -79,13 +79,13 @@ public class LeverPart extends WallMountedRedstonePart {
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         powered = !powered;
         updateRedstoneLevels();
-        if (player.world.isClient) {
+        if (player.getWorld().isClient) {
             if (powered) {
-                LeverBlockAccessor.callSpawnParticles(getBlockState(), player.world, hit.getBlockPos(), 1f);
+                LeverBlockAccessor.callSpawnParticles(getBlockState(), player.getWorld(), hit.getBlockPos(), 1f);
             }
         } else {
             float pitch = powered ? 0.6f : 0.5f;
-            player.world.playSound(null, hit.getBlockPos(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3f, pitch);
+            player.getWorld().playSound(null, hit.getBlockPos(), SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3f, pitch);
         }
         updateListeners();
         return ActionResult.SUCCESS;

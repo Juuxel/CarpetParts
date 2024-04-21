@@ -26,8 +26,8 @@ import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -59,7 +59,7 @@ public class SlabPart extends VanillaPart {
     }
 
     public static SlabPart fromNbt(PartDefinition definition, MultipartHolder holder, NbtCompound nbt) {
-        Block block = NbtUtil.getRegistryEntry(nbt, NbtKeys.BLOCK_ID, Registry.BLOCK);
+        Block block = NbtUtil.getRegistryEntry(nbt, NbtKeys.BLOCK_ID, Registries.BLOCK);
         boolean top = nbt.getBoolean(NbtKeys.IS_TOP);
 
         if (!(block instanceof SlabBlock slab)) {
@@ -71,7 +71,7 @@ public class SlabPart extends VanillaPart {
     }
 
     public static SlabPart fromBuf(PartDefinition definition, MultipartHolder holder, NetByteBuf buf, IMsgReadCtx ctx) throws InvalidInputDataException {
-        Block block = Registry.BLOCK.get(buf.readIdentifierSafe());
+        Block block = Registries.BLOCK.get(buf.readIdentifierSafe());
         boolean top = buf.readBoolean();
 
         if (!(block instanceof SlabBlock slab)) {
@@ -109,7 +109,7 @@ public class SlabPart extends VanillaPart {
     @Override
     public NbtCompound toTag() {
         return DataFixUtils.make(new NbtCompound(), tag -> {
-            NbtUtil.putRegistryEntry(tag, NbtKeys.BLOCK_ID, Registry.BLOCK, block);
+            NbtUtil.putRegistryEntry(tag, NbtKeys.BLOCK_ID, Registries.BLOCK, block);
             tag.putBoolean(NbtKeys.IS_TOP, half == BlockHalf.TOP);
         });
     }
@@ -117,7 +117,7 @@ public class SlabPart extends VanillaPart {
     @Override
     public void writeCreationData(NetByteBuf buffer, IMsgWriteCtx ctx) {
         super.writeCreationData(buffer, ctx);
-        buffer.writeIdentifier(Registry.BLOCK.getId(block));
+        buffer.writeIdentifier(Registries.BLOCK.getId(block));
         buffer.writeBoolean(half == BlockHalf.TOP);
     }
 
