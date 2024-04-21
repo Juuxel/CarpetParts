@@ -20,19 +20,19 @@ import juuxel.blockstoparts.api.category.CategorySet;
 import juuxel.vanillaparts.mixin.AbstractButtonBlockAccessor;
 import juuxel.vanillaparts.util.NbtKeys;
 import juuxel.vanillaparts.util.NbtUtil;
-import net.minecraft.block.AbstractButtonBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ButtonBlock;
 import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 
 import java.util.List;
 
@@ -49,7 +49,7 @@ public class ButtonPart extends WallMountedRedstonePart {
     }
 
     public static ButtonPart fromNbt(PartDefinition definition, MultipartHolder holder, NbtCompound nbt) {
-        Block block = NbtUtil.getRegistryEntry(nbt, NbtKeys.BLOCK_ID, Registry.BLOCK);
+        Block block = NbtUtil.getRegistryEntry(nbt, NbtKeys.BLOCK_ID, Registries.BLOCK);
         var face = NbtUtil.getEnum(nbt, NbtKeys.FACE, WallMountLocation.class);
         var facing = NbtUtil.getEnum(nbt, NbtKeys.FACING, Direction.class);
         ButtonPart part = new ButtonPart(definition, holder, block, face, facing);
@@ -59,7 +59,7 @@ public class ButtonPart extends WallMountedRedstonePart {
     }
 
     public static ButtonPart fromBuf(PartDefinition definition, MultipartHolder holder, NetByteBuf buf, IMsgReadCtx ctx) throws InvalidInputDataException {
-        Block block = Registry.BLOCK.get(buf.readIdentifierSafe());
+        Block block = Registries.BLOCK.get(buf.readIdentifierSafe());
         var face = buf.readEnumConstant(WallMountLocation.class);
         var facing = buf.readEnumConstant(Direction.class);
         return new ButtonPart(definition, holder, block, face, facing);
@@ -68,7 +68,7 @@ public class ButtonPart extends WallMountedRedstonePart {
     @Override
     public NbtCompound toTag() {
         return DataFixUtils.make(super.toTag(), tag -> {
-            NbtUtil.putRegistryEntry(tag, NbtKeys.BLOCK_ID, Registry.BLOCK, block);
+            NbtUtil.putRegistryEntry(tag, NbtKeys.BLOCK_ID, Registries.BLOCK, block);
             NbtUtil.putEnum(tag, NbtKeys.FACE, face);
             NbtUtil.putEnum(tag, NbtKeys.FACING, facing);
             tag.putBoolean(NbtKeys.POWERED, powered);
@@ -79,7 +79,7 @@ public class ButtonPart extends WallMountedRedstonePart {
     @Override
     public void writeCreationData(NetByteBuf buffer, IMsgWriteCtx ctx) {
         super.writeCreationData(buffer, ctx);
-        buffer.writeIdentifier(Registry.BLOCK.getId(block));
+        buffer.writeIdentifier(Registries.BLOCK.getId(block));
         buffer.writeEnumConstant(face);
         buffer.writeEnumConstant(facing);
     }
@@ -87,9 +87,9 @@ public class ButtonPart extends WallMountedRedstonePart {
     @Override
     public BlockState getBlockState() {
         return block.getDefaultState()
-            .with(AbstractButtonBlock.FACE, face)
-            .with(AbstractButtonBlock.FACING, facing)
-            .with(AbstractButtonBlock.POWERED, powered);
+            .with(ButtonBlock.FACE, face)
+            .with(ButtonBlock.FACING, facing)
+            .with(ButtonBlock.POWERED, powered);
     }
 
     private void tick() {
@@ -122,7 +122,7 @@ public class ButtonPart extends WallMountedRedstonePart {
             }
             updateListeners();
             if (powered) {
-                timer = buttonBlock.callGetPressTicks();
+                timer = buttonBlock.getPressTicks();
             }
         }
     }
@@ -130,12 +130,12 @@ public class ButtonPart extends WallMountedRedstonePart {
     @Override
     public ActionResult onUse(PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!powered) {
-            timer = buttonBlock.callGetPressTicks();
+            timer = buttonBlock.getPressTicks();
             powered = true;
-            if (!player.world.isClient) {
+            if (!player.getWorld().isClient) {
                 updateRedstoneLevels();
             }
-            buttonBlock.callPlayClickSound(player, player.world, hit.getBlockPos(), true);
+            buttonBlock.callPlayClickSound(player, player.getWorld(), hit.getBlockPos(), true);
             updateListeners();
         }
         return ActionResult.SUCCESS;

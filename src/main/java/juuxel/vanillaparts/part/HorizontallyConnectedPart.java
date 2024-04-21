@@ -25,11 +25,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalConnectingBlock;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.EmptyBlockView;
@@ -206,7 +206,7 @@ public abstract class HorizontallyConnectedPart extends VanillaPart {
     @Override
     public NbtCompound toTag() {
         return Util.with(super.toTag(), tag -> {
-            NbtUtil.putRegistryEntry(tag, NbtKeys.BLOCK_ID, Registry.BLOCK, block);
+            NbtUtil.putRegistryEntry(tag, NbtKeys.BLOCK_ID, Registries.BLOCK, block);
             tag.putBoolean(NbtKeys.NORTH, north);
             tag.putBoolean(NbtKeys.EAST, east);
             tag.putBoolean(NbtKeys.SOUTH, south);
@@ -217,7 +217,7 @@ public abstract class HorizontallyConnectedPart extends VanillaPart {
     @Override
     public void writeCreationData(NetByteBuf buf, IMsgWriteCtx ctx) {
         super.writeCreationData(buf, ctx);
-        buf.writeIdentifier(Registry.BLOCK.getId(block));
+        buf.writeIdentifier(Registries.BLOCK.getId(block));
         buf.writeBoolean(north).writeBoolean(east).writeBoolean(south).writeBoolean(west);
     }
 }

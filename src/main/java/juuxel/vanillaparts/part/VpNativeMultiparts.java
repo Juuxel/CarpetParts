@@ -5,10 +5,10 @@ import alexiil.mc.lib.multipart.api.NativeMultipart;
 import alexiil.mc.lib.multipart.api.PartDefinition;
 import juuxel.vanillaparts.lib.Exclusions;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
-import net.minecraft.block.AbstractButtonBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.ButtonBlock;
 import net.minecraft.block.CakeBlock;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.block.LeverBlock;
@@ -52,7 +52,7 @@ public final class VpNativeMultiparts {
     private static final NativeMultipart BUTTON = create(
         (world, pos, state) -> holder -> new ButtonPart(
             VpParts.BUTTON, holder, state.getBlock(),
-            state.get(AbstractButtonBlock.FACE), state.get(AbstractButtonBlock.FACING)
+            state.get(ButtonBlock.FACE), state.get(ButtonBlock.FACING)
         )
     );
 
@@ -77,7 +77,7 @@ public final class VpNativeMultiparts {
                 return SLAB;
             } else if (block instanceof FenceBlock) {
                 return FENCE;
-            } else if (block instanceof AbstractButtonBlock) {
+            } else if (block instanceof ButtonBlock) {
                 return BUTTON;
             }
 

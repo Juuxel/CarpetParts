@@ -17,9 +17,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FenceBlock;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 
 public class FencePart extends HorizontallyConnectedPart {
@@ -35,7 +35,7 @@ public class FencePart extends HorizontallyConnectedPart {
     }
 
     public static FencePart fromNbt(PartDefinition definition, MultipartHolder holder, NbtCompound nbt) {
-        Block fence = NbtUtil.getRegistryEntry(nbt, NbtKeys.BLOCK_ID, Registry.BLOCK);
+        Block fence = NbtUtil.getRegistryEntry(nbt, NbtKeys.BLOCK_ID, Registries.BLOCK);
         boolean north = nbt.getBoolean(NbtKeys.NORTH);
         boolean east = nbt.getBoolean(NbtKeys.EAST);
         boolean south = nbt.getBoolean(NbtKeys.SOUTH);
@@ -45,7 +45,7 @@ public class FencePart extends HorizontallyConnectedPart {
     }
 
     public static FencePart fromBuf(PartDefinition definition, MultipartHolder holder, NetByteBuf buf, IMsgReadCtx ctx) throws InvalidInputDataException {
-        Block fence = Registry.BLOCK.get(buf.readIdentifierSafe());
+        Block fence = Registries.BLOCK.get(buf.readIdentifierSafe());
         boolean north = buf.readBoolean();
         boolean east = buf.readBoolean();
         boolean south = buf.readBoolean();
